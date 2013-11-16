@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package databasemysql;
 
 import MySQL.MySQL;
@@ -26,6 +22,5 @@ public class DatabaseMySQL {
         } catch (Exception e) {
             System.out.println("err");
         }
-
     }
 }
