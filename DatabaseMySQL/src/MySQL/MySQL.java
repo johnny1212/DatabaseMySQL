@@ -13,21 +13,20 @@ public class MySQL {
 
     private Connection connect = null;
     private Statement statement = null;
-    String url = "jdbc:mysql://mysql.wu.cz/wu_johnny1212";
-    String user = "wu_johnny1212";
-    String password = "***";
+    private String url = "jdbc:mysql://sql3.freesqldatabase.com/sql323113";
+    private String user = "sql323113";
+    private String password = "***";
 
     private void connect() {
         try {
             connect = DriverManager.getConnection(url, user, password);
             statement = connect.createStatement();
-            // Result set get the result of the SQL query
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private void close() {
+    public void close() {
         try {
             if (statement != null) {
                 statement.close();
@@ -40,19 +39,16 @@ public class MySQL {
         }
     }
 
-    public ResultSet select() throws Exception {
+    public ResultSet select(String query) throws Exception {
         try {
             if (statement == null) {
                 connect();
             }
             if (statement != null) {
-                return statement.executeQuery("select * from x_user");
+                return statement.executeQuery(query);
             }
-
         } catch (Exception e) {
             throw e;
-        } finally {
-            close();
         }
         return null;
     }
