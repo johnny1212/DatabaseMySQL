@@ -17,6 +17,10 @@ public class MySQL {
     private String user = "sql323113";
     private String password = "***";
 
+    public MySQL() {
+        password = Pass.getPass();
+    }
+
     private void connect() {
         try {
             connect = DriverManager.getConnection(url, user, password);
