@@ -15,10 +15,14 @@ public class DatabaseMySQL {
     public static void main(String[] args) {
         MySQL database = new MySQL();
         try {
-            ResultSet rs = database.select();
-            System.out.println(rs.getInt(1));
-            System.out.println(rs.getString(2));
-            System.out.println(rs.getString(3));
+
+            ResultSet rs = database.select("SELECT * from x_user;");
+            if (rs.next()) {
+                System.out.println(rs.getInt(1));
+                System.out.println(rs.getString(2));
+                System.out.println(rs.getString(3));
+            }
+            database.close();
         } catch (Exception e) {
             System.out.println("err");
         }
