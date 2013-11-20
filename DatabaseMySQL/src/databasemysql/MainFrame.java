@@ -2,6 +2,7 @@ package databasemysql;
 
 import CentralSystem.CentralSystem;
 import Entity.Contact;
+import Entity.Message;
 import Entity.User;
 import java.awt.GridLayout;
 import java.awt.Panel;
@@ -10,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JLabel;
+import javax.swing.JTable;
 
 /**
  *
@@ -19,6 +21,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private CentralSystem cs = new CentralSystem();
     private List<User> konverzace = new ArrayList<User>();
+    private int messageIndex = 0;
 
     public MainFrame() {
         initComponents();
@@ -39,12 +42,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void updateContactList() {
-        /*String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-         public int getSize() { return strings.length; }
-         public Object getElementAt(int i) { return strings[i]; }*/
-        //List<Contact> contacts = cs.getContactList();
         jListContactList.setModel(new javax.swing.AbstractListModel() {
-            // String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
             List<Contact> contacts = cs.getContactList();
 
             public int getSize() {
@@ -59,22 +57,30 @@ public class MainFrame extends javax.swing.JFrame {
             public void mouseClicked(MouseEvent evt) {
                 if (jListContactList.getModel().getSize() > 0) {
                     if (evt.getClickCount() == 2) {
-                        int index = jListContactList.locationToIndex(evt.getPoint());
-                        System.out.println("Otevřít komunikaci s: " + jListContactList.getModel().getElementAt(index).toString());
-                        Panel p = new Panel();
-                        p.setLayout(new GridLayout(3, 1));
-                        p.add(new JLabel("This is tab " + jListContactList.getModel().getElementAt(index).toString()));
-                        p.add(new JLabel("This is tab2 " + jListContactList.getModel().getElementAt(index).toString()));
-                        jTabbedPaneMessages.addTab(jListContactList.getModel().getElementAt(index).toString(), p);
-                        /* List<Message> zpravy = cs.getMessages(((Contact) jListContactList.getModel().getElementAt(index)).getContact());
-                         for (Message message : zpravy) {
-                         System.out.println(message.getWhen().toLocaleString() + "-" + message.getText());
-                         }*/
+                        messageIndex = jListContactList.locationToIndex(evt.getPoint());
+                        System.out.println("Otevřít komunikaci s: " + jListContactList.getModel().getElementAt(messageIndex).toString());
+                        updateMessagePanel();
                     }
                 }
             }
         });
         jScrollPane1.setViewportView(jListContactList);
+    }
+
+    public void updateMessagePanel() {
+        //jTabbedPaneMessages.getTabComponentAt(index);
+        Panel p = new Panel();
+        p.setLayout(new GridLayout(3, 1));
+        p.add(new JLabel("Komunikace s " + jListContactList.getModel().getElementAt(messageIndex).toString()));
+
+        List<Message> zpravy = cs.getMessages(((Contact) jListContactList.getModel().getElementAt(messageIndex)).getContact());
+        MessageTableModel model = new MessageTableModel(zpravy);
+        JTable table = new JTable(model);
+        table.setShowGrid(true);
+        table.setShowHorizontalLines(true);
+        table.setShowVerticalLines(true);
+        p.add(table);
+        jTabbedPaneMessages.addTab(jListContactList.getModel().getElementAt(messageIndex).toString(), p);
     }
 
     @SuppressWarnings("unchecked")
